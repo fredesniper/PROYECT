@@ -13,13 +13,14 @@ public class Player : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>(); //Guardamos el rigibody en la variable
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();//Guardamos el GameManager en la variable
-        
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();//Guardamos el GameManager en la variable   
     }
 
     void Update() {
         playerDown();
+        playerMove();
     }
+    
     
     //Creamos una funcion para congelar el riggidboy de la bola cuando no detecte el target
     public void EnableRigidbody(bool enable){ //Esta habilitado el rigibody si es si None si es no FreezeALL
@@ -41,12 +42,27 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject);
             _gameManager.actualizarContador(1);
         }
+
+         if (other.CompareTag("Enemy")) //Si colisionamos con un enemigo
+        {
+            Destroy(this.gameObject);
+            _gameManager.GameOver();//Ejecutamos la funcion fin del juego
+        }
     }
+
     //Creamos una funcion para detectar que el jugador esta fuera del tablero
     private void playerDown(){
         if(transform.position.y <= -4 | transform.position.y >= 4){
             _gameManager.GameOver();
             Destroy(this.gameObject);
+            Debug.Log("Player is dead");
         }
+    }
+    //Creamos una funcion para mover al jugador tocando la pantalla
+    private void playerMove(){
+       if (Input.touchCount > 0)
+       {
+           //por definir
+       }
     }
 }
