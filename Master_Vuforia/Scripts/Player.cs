@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     //Variables las privadas empiezan por _xxxx 
     private Rigidbody _rigidbody; //Variable para el rigidbody
     private GameManager _gameManager; //Variable para acceder al GameManager
+    public SoundManager _soundManager; //Variable para el soundmanager 
 
     // Start is called before the first frame update
     void Start()
@@ -15,10 +16,12 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>(); //Guardamos el rigibody en la variable
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();//Guardamos el GameManager en la variable   
     }
+    private void awake(){
+      _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+   }
 
     void Update() {
         playerDown();
-        playerMove();
     }
     
     
@@ -35,16 +38,30 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);//Destruimos al jugador
             _gameManager.GameOver();//Ejecutamos la funcion fin del juego
         }
+
+         if (collision.gameObject.CompareTag("Scene")) //Si colisionamos con un enemigo
+        {
+           _soundManager.seleccionAudio(2, 0.5f); //Audio de la madera
+           Debug.Log("El jugador a tocado madera");
+        }
     }
     //Creamos una funcion para detectar la colision contra los coleccionables (Tag-Collectable)
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Collectable")){
             Destroy(other.gameObject);
             _gameManager.actualizarContador(1);
+            _soundManager.seleccionAudio(1, 0.5f); //Activamos sonido de los collectable
+        }
+
+        if(other.gameObject.CompareTag("SpecialObject")){
+            Destroy(other.gameObject);
+            //Llamar funcion nuevo special object encontrado
+            _soundManager.seleccionAudio(4, 0.5f); //Activamos sonido de los collectable
         }
 
          if (other.CompareTag("Enemy")) //Si colisionamos con un enemigo
         {
+            _soundManager.seleccionAudio(0, 0.5f);//Risa de fantasma
             Destroy(this.gameObject);
             _gameManager.GameOver();//Ejecutamos la funcion fin del juego
         }
@@ -57,12 +74,5 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
             Debug.Log("Player is dead");
         }
-    }
-    //Creamos una funcion para mover al jugador tocando la pantalla
-    private void playerMove(){
-       if (Input.touchCount > 0)
-       {
-           //por definir
-       }
     }
 }
