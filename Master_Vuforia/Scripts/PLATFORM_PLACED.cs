@@ -14,18 +14,19 @@ public class PLATFORM_PLACED : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
     
-    private void Update() {
+     void Update() {
         if (Time.time > momInicio + tiempoHastaEx)
         {
             enableConstrains();
             momInicio = float.MaxValue;
+            
             Debug.Log("Se activa la gravedad");//En 5 segundos
         }
 
         if (Time.time > momInicio + tiempoHastaEx2)
-        {
+        { 
             enableKinematic();
-            momInicio = float.MaxValue;
+           momInicio = float.MaxValue;
             Debug.Log("Se activa el kinematic"); //En 7 segundos
         }
     }
@@ -37,7 +38,6 @@ public class PLATFORM_PLACED : MonoBehaviour
             momInicio = Time.time;
             Debug.Log(Time.time);
         }
-       
     }
 
     private void enableConstrains(){
@@ -46,9 +46,7 @@ public class PLATFORM_PLACED : MonoBehaviour
     }
 
     private void enableKinematic(){
-        if (_rigidbody.isKinematic == false)
-        {
-          _rigidbody.isKinematic = true; //Con esta funcion activamos isKinematic  
-        }
+        _rigidbody.isKinematic = true; //Con esta funcion activamos isKinematic   
+        _rigidbody.useGravity = false;
     }
 }
